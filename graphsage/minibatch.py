@@ -262,14 +262,17 @@ class NodeMinibatchIterator(object):
         return self.batch_num * self.batch_size >= len(self.train_nodes)
 
     def batch_feed_dict(self, batch_nodes, val=False):
+        print('entra in batch_feed_dict')
         batch1id = batch_nodes
         batch1 = [self.id2idx[n] for n in batch1id]
+        print('siamo a metà di batch_feed_dict')
               
         labels = np.vstack([self._make_label_vec(node) for node in batch1id])
         feed_dict = dict()
         feed_dict.update({self.placeholders['batch_size'] : len(batch1)})
         feed_dict.update({self.placeholders['batch']: batch1})
         feed_dict.update({self.placeholders['labels']: labels})
+        print('appena prima di ritornare feed_dict')
 
         return feed_dict, labels
 
@@ -307,9 +310,11 @@ class NodeMinibatchIterator(object):
         return self.batch_feed_dict(batch_nodes)
 
     def incremental_embed_feed_dict(self, size, iter_num):
+        print('entra in embed_feed_dict')
         node_list = self.nodes
         val_nodes = node_list[iter_num*size:min((iter_num+1)*size, 
             len(node_list))]
+        print('appena prima di uscire da incremental_embed_feed_dict')
         return self.batch_feed_dict(val_nodes), (iter_num+1)*size >= len(node_list), val_nodes
 
     def shuffle(self):
